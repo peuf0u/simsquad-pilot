@@ -1,5 +1,11 @@
 # simsquad-pilot
 
+> **Heads-up:** simsquad-pilot is being merged into
+> [simsquad](https://github.com/peuf0u/simsquad) as installable agent skills
+> (run tests from inside your app repo, Gherkin feature files, mobilecli
+> instead of mobile-mcp). This repo keeps working as-is but won't get new
+> features, and will be archived when simsquad 0.4.0 ships.
+
 Agent-driven exploratory and smoke-test runner for mobile features, built on
 top of [simsquad](https://github.com/peuf0u/simsquad). The squad gets
 deployed; pilot flies the mission.
