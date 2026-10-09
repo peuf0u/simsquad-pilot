@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/peuf0u/simsquad-pilot/schemas/report.schema.json",
+  "title": "Run report",
+  "description": "Aggregated run report produced by scripts/aggregate.py from per-device result.json files. validate.py additionally enforces that summary counts match the device payloads. Path fields are relative to the run dir.",
+  "type": "object",
+  "required": ["run_id", "feature_id", "started_at", "finished_at", "squad", "summary", "devices"],
+  "additionalProperties": false,
+  "properties": {
+    "run_id": { "type": "string", "minLength": 1 },
+    "feature_id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
+    "started_at": { "type": "string", "minLength": 1 },
+    "finished_at": { "type": "string", "minLength": 1 },
+    "squad": {
+      "type": "object",
+      "required": ["name"],
+      "additionalProperties": false,
+      "properties": { "name": { "type": "string", "minLength": 1 } }
+    },
+    "summary": {
+      "type": "object",
+      "required": ["verdict", "devices_total", "smoke_passed", "smoke_failed", "bugs", "blocked", "questions"],
+      "additionalProperties": false,
+      "properties": {
+        "verdict": { "enum": ["passed", "failed", "infra"] },
+        "devices_total": { "type": "integer", "minimum": 0 },
+        "smoke_passed": { "type": "integer", "minimum": 0 },
+        "smoke_failed": { "type": "integer", "minimum": 0 },
+        "bugs": { "type": "integer", "minimum": 0 },
+        "blocked": { "type": "integer", "minimum": 0 },
+        "questions": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "devices": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["platform", "id", "smoke", "exploration"],
+        "additionalProperties": true,
+        "properties": {
+          "platform": { "enum": ["ios", "android"] },
+          "id": { "type": "string", "minLength": 1 },
+          "name": { "type": "string" },
+          "model": { "type": "string" },
+          "os_version": { "type": "string" },
+          "bundle_id": { "type": "string" },
+          "worker_status": {
+            "enum": ["ok", "blocked", "error"],
+            "description": "Orchestrator's verdict on the worker itself (timebox kill -> blocked, missing/invalid result.json -> error)."
+          },
+          "smoke": { "$ref": "result.schema.json#/$defs/smoke" },
+          "exploration": { "$ref": "result.schema.json#/$defs/exploration" }
+        }
+      }
+    }
+  }
+}

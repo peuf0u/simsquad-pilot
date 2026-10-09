@@ -1,0 +1,26 @@
+{
+  "feature_id": "login-magic-link",
+  "title": "Login with magic link",
+  "project_dir": "~/code/my-app",
+  "matrix": {
+    "ios": ["iPhone 17:iOS 26.4:1"]
+  },
+  "env": {
+    "api": "staging",
+    "persona": "alice"
+  },
+  "smoke": [
+    "App launches without crashing",
+    "Login entry point is visible",
+    "Feature entry point is reachable"
+  ],
+  "explore": {
+    "charter": "Explore the magic-link login path, including invalid email, resend, and successful login.",
+    "risks": [
+      "Error states may be unclear",
+      "Deep link may fail to return to the app",
+      "Loading state may get stuck"
+    ],
+    "timebox_minutes": 8
+  }
+}

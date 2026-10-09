@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/peuf0u/simsquad-pilot/schemas/feature-context.schema.json",
+  "title": "Feature context",
+  "description": "Test intent only — no build repos, no bundle ids; those are simsquad's job. project_dir is the one bridge to the app under test.",
+  "type": "object",
+  "required": ["feature_id", "title", "smoke", "explore"],
+  "additionalProperties": false,
+  "properties": {
+    "feature_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]*$",
+      "description": "Lowercase slug; becomes part of the run id and squad name, so it must survive simsquad name sanitisation unchanged."
+    },
+    "title": { "type": "string", "minLength": 1 },
+    "project_dir": {
+      "type": "string",
+      "description": "App project whose simsquad.toml defines the build. Defaults to the orchestrator's cwd."
+    },
+    "matrix": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Optional override; each entry maps verbatim onto --ios-spec / --android-spec. Omit to use the project's TOML matrix.",
+      "properties": {
+        "ios": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+        "android": { "type": "array", "items": { "type": "string", "minLength": 1 } }
+      }
+    },
+    "env": {
+      "type": "object",
+      "additionalProperties": { "type": "string" },
+      "description": "Passed through simsquad deploy --env; arrives on every device row."
+    },
+    "smoke": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 1 },
+      "description": "Smoke goals the worker verifies against the real screen."
+    },
+    "explore": {
+      "type": "object",
+      "required": ["charter", "timebox_minutes"],
+      "additionalProperties": false,
+      "properties": {
+        "charter": { "type": "string", "minLength": 1 },
+        "risks": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+        "timebox_minutes": { "type": "integer", "minimum": 1, "maximum": 60 }
+      }
+    }
+  }
+}

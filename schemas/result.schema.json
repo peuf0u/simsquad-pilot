@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/peuf0u/simsquad-pilot/schemas/result.schema.json",
+  "title": "Per-worker result",
+  "description": "One device's smoke checks + exploration. Written by a worker agent into its run dir; a worker without a schema-valid result.json is recorded as error. Path fields are relative to the directory containing result.json. validate.py additionally enforces: evidence required and existing on disk for bug/blocked/question findings, severity required for bugs.",
+  "type": "object",
+  "required": ["device", "smoke", "exploration"],
+  "additionalProperties": false,
+  "properties": {
+    "device": {
+      "type": "object",
+      "required": ["platform", "id", "bundle_id"],
+      "additionalProperties": true,
+      "properties": {
+        "platform": { "enum": ["ios", "android"] },
+        "id": { "type": "string", "minLength": 1 },
+        "name": { "type": "string" },
+        "model": { "type": "string" },
+        "os_version": { "type": "string" },
+        "bundle_id": { "type": "string", "minLength": 1 }
+      }
+    },
+    "smoke": { "$ref": "#/$defs/smoke" },
+    "exploration": { "$ref": "#/$defs/exploration" }
+  },
+  "$defs": {
+    "smoke": {
+      "type": "object",
+      "required": ["status", "checks"],
+      "additionalProperties": false,
+      "properties": {
+        "status": { "enum": ["passed", "failed", "skipped"] },
+        "checks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["goal", "verdict"],
+            "additionalProperties": false,
+            "properties": {
+              "goal": { "type": "string", "minLength": 1 },
+              "verdict": { "enum": ["pass", "fail", "skip"] },
+              "observation": { "type": "string" },
+              "screenshot": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "exploration": {
+      "type": "object",
+      "required": ["status", "actions", "findings"],
+      "additionalProperties": false,
+      "properties": {
+        "status": { "enum": ["completed", "blocked", "error"] },
+        "blocked_reason": { "type": "string" },
+        "actions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["index", "kind", "observation"],
+            "additionalProperties": false,
+            "properties": {
+              "index": { "type": "integer", "minimum": 1 },
+              "kind": { "type": "string", "minLength": 1 },
+              "target": { "type": "string" },
+              "observation": { "type": "string" },
+              "screenshot": { "type": "string" }
+            }
+          }
+        },
+        "findings": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/finding" }
+        }
+      }
+    },
+    "finding": {
+      "type": "object",
+      "required": ["type", "title"],
+      "additionalProperties": false,
+      "properties": {
+        "type": { "enum": ["bug", "blocked", "question", "note"] },
+        "severity": { "enum": ["high", "medium", "low"] },
+        "title": { "type": "string", "minLength": 1 },
+        "evidence": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+        "repro_steps": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+        "expected": { "type": "string" },
+        "actual": { "type": "string" }
+      }
+    }
+  }
+}
