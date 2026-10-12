@@ -1,10 +1,11 @@
 # simsquad-pilot
 
-> **Heads-up:** simsquad-pilot is being merged into
-> [simsquad](https://github.com/peuf0u/simsquad) as installable agent skills
-> (run tests from inside your app repo, Gherkin feature files, mobilecli
-> instead of mobile-mcp). This repo keeps working as-is but won't get new
-> features, and will be archived when simsquad 0.4.0 ships.
+> **Archived.** simsquad-pilot is now part of
+> [simsquad](https://github.com/peuf0u/simsquad) 0.4.0 as installable agent
+> skills: run `simsquad skill install` in your app repo and ask your agent to
+> "verify …". See
+> [agent testing](https://github.com/peuf0u/simsquad/blob/main/docs/agent-testing.md).
+> This repo is read-only and gets no further changes.
 
 Agent-driven exploratory and smoke-test runner for mobile features, built on
 top of [simsquad](https://github.com/peuf0u/simsquad). The squad gets
